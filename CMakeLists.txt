@@ -22,6 +22,12 @@ caffe_option(BUILD_matlab "Build Matlab wrapper" OFF IF UNIX OR APPLE)
 caffe_option(BUILD_docs   "Build documentation" ON IF UNIX OR APPLE)
 caffe_option(BUILD_python_layer "Build the caffe python layer" ON)
 
+if( MSVC )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dsnprintf=_snprintf -D_CRT_SECURE_NO_DEPRECATE" )
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} ".a")
+  set(CMAKE_FIND_LIBRARY_PREFIXES ${CMAKE_FIND_LIBRARY_PREFIXES} "lib" "")
+endif()
+
 # ---[ Dependencies
 include(cmake/Dependencies.cmake)
 
@@ -49,16 +55,18 @@ include_directories(${Caffe_INCLUDE_DIR} ${PROJECT_BINARY_DIR})
 include_directories(BEFORE src) # This is needed for gtest.
 
 # ---[ Subdirectories
-add_subdirectory(src/gtest)
 add_subdirectory(src/caffe)
-add_subdirectory(tools)
-add_subdirectory(examples)
-add_subdirectory(python)
-add_subdirectory(matlab)
-add_subdirectory(docs)
+if(NOT CAFFE_PLAYER)
+  add_subdirectory(src/gtest)
+  add_subdirectory(tools)
+  add_subdirectory(examples)
+  add_subdirectory(python)
+  add_subdirectory(matlab)
+  add_subdirectory(docs)
 
-# ---[ Linter target
-add_custom_target(lint COMMAND ${CMAKE_COMMAND} -P ${PROJECT_SOURCE_DIR}/cmake/lint.cmake)
+  # ---[ Linter target
+  add_custom_target(lint COMMAND ${CMAKE_COMMAND} -P ${PROJECT_SOURCE_DIR}/cmake/lint.cmake)
+endif()
 
 # ---[ Configuration summary
 caffe_print_configuration_summary()

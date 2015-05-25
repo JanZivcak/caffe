@@ -1,4 +1,4 @@
-#ifndef CAFFE_RNG_CPP_HPP_
+#if  !defined(CAFFE_RNG_CPP_HPP_) && !defined(CAFFE_PLAYER)
 #define CAFFE_RNG_CPP_HPP_
 
 #include <algorithm>

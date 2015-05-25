@@ -120,8 +120,43 @@ class LayerRegisterer {
   {                                                                            \
     return shared_ptr<Layer<Dtype> >(new type##Layer<Dtype>(param));           \
   }                                                                            \
+  void Register##type(){}                                                      \
   REGISTER_LAYER_CREATOR(type, Creator_##type##Layer)
 
+#ifdef _MSC_VER
+
+void RegisterAccuracy();
+void RegisterBNLL();
+void RegisterConcat();
+void RegisterDropout();
+void RegisterEltwise();
+void RegisterEuclideanLoss();
+void RegisterFlatten();
+void RegisterHingeLoss();
+void RegisterIm2col();
+void RegisterInfogainLoss();
+void RegisterInnerProduct();
+void RegisterLRN();
+void RegisterMultinomialLogisticLoss();
+void RegisterPower();
+void RegisterSoftmaxWithLoss();
+void RegisterSplit();
+void RegisterSigmoidCrossEntropyLoss();
+
+#endif
+
 }  // namespace caffe
+
+#ifdef _MSC_VER
+
+class MSCLayerRegister
+{
+public:
+    MSCLayerRegister();
+};
+
+static MSCLayerRegister _msc_layer_register;
+
+#endif
 
 #endif  // CAFFE_LAYER_FACTORY_H_

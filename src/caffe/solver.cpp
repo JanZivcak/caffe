@@ -391,7 +391,7 @@ Dtype SGDSolver<Dtype>::GetLearningRate() {
   } else if (lr_policy == "inv") {
     rate = this->param_.base_lr() *
         pow(Dtype(1) + this->param_.gamma() * this->iter_,
-            - this->param_.power());
+            Dtype(- this->param_.power()));
   } else if (lr_policy == "multistep") {
     if (this->current_step_ < this->param_.stepvalue_size() &&
           this->iter_ >= this->param_.stepvalue(this->current_step_)) {
@@ -404,7 +404,7 @@ Dtype SGDSolver<Dtype>::GetLearningRate() {
   } else if (lr_policy == "poly") {
     rate = this->param_.base_lr() * pow(Dtype(1.) -
         (Dtype(this->iter_) / Dtype(this->param_.max_iter())),
-        this->param_.power());
+        Dtype(this->param_.power()));
   } else if (lr_policy == "sigmoid") {
     rate = this->param_.base_lr() * (Dtype(1.) /
         (Dtype(1.) + exp(-this->param_.gamma() * (Dtype(this->iter_) -

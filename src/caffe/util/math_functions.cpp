@@ -1,5 +1,7 @@
+#ifndef CAFFE_PLAYER
 #include <boost/math/special_functions/next.hpp>
 #include <boost/random.hpp>
+#endif
 
 #include <limits>
 
@@ -216,6 +218,7 @@ void caffe_abs<double>(const int n, const double* a, double* y) {
     vdAbs(n, a, y);
 }
 
+#ifndef CAFFE_PLAYER
 unsigned int caffe_rng_rand() {
   return (*caffe_rng())();
 }
@@ -314,6 +317,7 @@ void caffe_rng_bernoulli<double>(const int n, const double p, unsigned int* r);
 
 template
 void caffe_rng_bernoulli<float>(const int n, const float p, unsigned int* r);
+#endif
 
 template <>
 float caffe_cpu_strided_dot<float>(const int n, const float* x, const int incx,
@@ -338,6 +342,7 @@ float caffe_cpu_dot<float>(const int n, const float* x, const float* y);
 template
 double caffe_cpu_dot<double>(const int n, const double* x, const double* y);
 
+#ifndef _MSC_VER
 template <>
 int caffe_cpu_hamming_distance<float>(const int n, const float* x,
                                   const float* y) {
@@ -359,6 +364,7 @@ int caffe_cpu_hamming_distance<double>(const int n, const double* x,
   }
   return dist;
 }
+#endif
 
 template <>
 float caffe_cpu_asum<float>(const int n, const float* x) {

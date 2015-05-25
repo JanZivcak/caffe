@@ -1,4 +1,4 @@
-#ifndef CAFFE_DATA_LAYERS_HPP_
+#if !defined(CAFFE_DATA_LAYERS_HPP_) && !defined(CAFFE_PLAYER)
 #define CAFFE_DATA_LAYERS_HPP_
 
 #include <string>

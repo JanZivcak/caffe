@@ -1,3 +1,16 @@
+# Caffe Player
+Caffe Player is a modification of Caffe which can only play the pretrained models (do the forward pass with a network trained in full version of Caffe).
+Thanks to that, some of the original dependencies were removed. 
+Current dependencies:
+glog, google protobuf, opencv, blas
+
+Caffe Player is compilable in Visual Studio 2010:
+
+- you can compile glog, google protobuf and opencv libraries for VS easily
+- for blas you can use [OpenBLAS binary packages](http://sourceforge.net/projects/openblas/files/) (tested with v0.2.13)
+
+Jan Zivcak
+
 # Caffe
 
 Caffe is a deep learning framework made with expression, speed, and modularity in mind.

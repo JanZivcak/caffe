@@ -1,10 +1,12 @@
 # This list is required for static linking and exported to CaffeConfig.cmake
 set(Caffe_LINKER_LIBS "")
 
-# ---[ Boost
-find_package(Boost 1.46 REQUIRED COMPONENTS system thread)
-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
-list(APPEND Caffe_LINKER_LIBS ${Boost_LIBRARIES})
+if(NOT CAFFE_PLAYER)
+  # ---[ Boost
+  find_package(Boost 1.46 REQUIRED COMPONENTS system thread)
+  include_directories(SYSTEM ${Boost_INCLUDE_DIR})
+  list(APPEND Caffe_LINKER_LIBS ${Boost_LIBRARIES})
+endif()
 
 # ---[ Threads
 find_package(Threads REQUIRED)
@@ -15,33 +17,37 @@ find_package(Glog REQUIRED)
 include_directories(SYSTEM ${GLOG_INCLUDE_DIRS})
 list(APPEND Caffe_LINKER_LIBS ${GLOG_LIBRARIES})
 
-# ---[ Google-gflags
-find_package(GFlags REQUIRED)
-include_directories(SYSTEM ${GFLAGS_INCLUDE_DIRS})
-list(APPEND Caffe_LINKER_LIBS ${GFLAGS_LIBRARIES})
+if(NOT CAFFE_PLAYER)
+  # ---[ Google-gflags
+  find_package(GFlags REQUIRED)
+  include_directories(SYSTEM ${GFLAGS_INCLUDE_DIRS})
+  list(APPEND Caffe_LINKER_LIBS ${GFLAGS_LIBRARIES})
+endif()
 
 # ---[ Google-protobuf
 include(cmake/ProtoBuf.cmake)
 
-# ---[ HDF5
-find_package(HDF5 COMPONENTS HL REQUIRED)
-include_directories(SYSTEM ${HDF5_INCLUDE_DIRS} ${HDF5_HL_INCLUDE_DIR})
-list(APPEND Caffe_LINKER_LIBS ${HDF5_LIBRARIES})
+if(NOT CAFFE_PLAYER)
+  # ---[ HDF5
+  find_package(HDF5 COMPONENTS HL REQUIRED)
+  include_directories(SYSTEM ${HDF5_INCLUDE_DIRS} ${HDF5_HL_INCLUDE_DIR})
+  list(APPEND Caffe_LINKER_LIBS ${HDF5_LIBRARIES})
 
-# ---[ LMDB
-find_package(LMDB REQUIRED)
-include_directories(SYSTEM ${LMDB_INCLUDE_DIR})
-list(APPEND Caffe_LINKER_LIBS ${LMDB_LIBRARIES})
+  # ---[ LMDB
+  find_package(LMDB REQUIRED)
+  include_directories(SYSTEM ${LMDB_INCLUDE_DIR})
+  list(APPEND Caffe_LINKER_LIBS ${LMDB_LIBRARIES})
 
-# ---[ LevelDB
-find_package(LevelDB REQUIRED)
-include_directories(SYSTEM ${LevelDB_INCLUDE})
-list(APPEND Caffe_LINKER_LIBS ${LevelDB_LIBRARIES})
+  # ---[ LevelDB
+  find_package(LevelDB REQUIRED)
+  include_directories(SYSTEM ${LevelDB_INCLUDE})
+  list(APPEND Caffe_LINKER_LIBS ${LevelDB_LIBRARIES})
 
-# ---[ Snappy
-find_package(Snappy REQUIRED)
-include_directories(SYSTEM ${Snappy_INCLUDE_DIR})
-list(APPEND Caffe_LINKER_LIBS ${Snappy_LIBRARIES})
+  # ---[ Snappy
+  find_package(Snappy REQUIRED)
+  include_directories(SYSTEM ${Snappy_INCLUDE_DIR})
+  list(APPEND Caffe_LINKER_LIBS ${Snappy_LIBRARIES})
+endif()
 
 # ---[ CUDA
 include(cmake/Cuda.cmake)

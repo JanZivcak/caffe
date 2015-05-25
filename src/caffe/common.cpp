@@ -9,6 +9,7 @@ namespace caffe {
 
 shared_ptr<Caffe> Caffe::singleton_;
 
+#ifndef CAFFE_PLAYER
 // random seeding
 int64_t cluster_seedgen(void) {
   int64_t s, seed, pid;
@@ -28,27 +29,34 @@ int64_t cluster_seedgen(void) {
   seed = abs(((s * 181) * ((pid - 83) * 359)) % 104729);
   return seed;
 }
-
+#endif
 
 void GlobalInit(int* pargc, char*** pargv) {
+#ifndef CAFFE_PLAYER
   // Google flags.
   ::gflags::ParseCommandLineFlags(pargc, pargv, true);
   // Google logging.
   ::google::InitGoogleLogging(*(pargv)[0]);
   // Provide a backtrace on segfault.
   ::google::InstallFailureSignalHandler();
+#endif
 }
 
 #ifdef CPU_ONLY  // CPU-only Caffe.
 
-Caffe::Caffe()
-    : random_generator_(), mode_(Caffe::CPU) { }
+Caffe::Caffe() :
+#ifndef CAFFE_PLAYER
+    random_generator_(),
+#endif
+    mode_(Caffe::CPU) { }
 
 Caffe::~Caffe() { }
 
 void Caffe::set_random_seed(const unsigned int seed) {
+#ifndef CAFFE_PLAYER
   // RNG seed
   Get().random_generator_.reset(new RNG(seed));
+#endif
 }
 
 void Caffe::SetDevice(const int device_id) {
@@ -59,7 +67,7 @@ void Caffe::DeviceQuery() {
   NO_GPU;
 }
 
-
+#ifndef CAFFE_PLAYER
 class Caffe::RNG::Generator {
  public:
   Generator() : rng_(new caffe::rng_t(cluster_seedgen())) {}
@@ -81,6 +89,7 @@ Caffe::RNG& Caffe::RNG::operator=(const RNG& other) {
 void* Caffe::RNG::generator() {
   return static_cast<void*>(generator_->rng());
 }
+#endif
 
 #else  // Normal GPU + CPU Caffe.
 

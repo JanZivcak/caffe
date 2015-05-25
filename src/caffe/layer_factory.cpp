@@ -177,3 +177,26 @@ REGISTER_LAYER_CREATOR(Python, GetPythonLayer);
 // Layers that use their constructor as their default creator should be
 // registered in their corresponding cpp files. Do not register them here.
 }  // namespace caffe
+
+#ifdef _MSC_VER
+MSCLayerRegister::MSCLayerRegister()
+{
+    caffe::RegisterAccuracy();
+    caffe::RegisterBNLL();
+    caffe::RegisterConcat();
+    caffe::RegisterDropout();
+    caffe::RegisterEltwise();
+    caffe::RegisterEuclideanLoss();
+    caffe::RegisterFlatten();
+    caffe::RegisterHingeLoss();
+    caffe::RegisterIm2col();
+    caffe::RegisterInfogainLoss();
+    caffe::RegisterInnerProduct();
+    caffe::RegisterLRN();
+    caffe::RegisterMultinomialLogisticLoss();
+    caffe::RegisterPower();
+    caffe::RegisterSoftmaxWithLoss();
+    caffe::RegisterSplit();
+    caffe::RegisterSigmoidCrossEntropyLoss();
+}
+#endif

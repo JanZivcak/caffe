@@ -1,12 +1,18 @@
 #ifndef CAFFE_UTIL_IO_H_
 #define CAFFE_UTIL_IO_H_
 
+#ifdef _MSC_VER
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
 #include <string>
 
 #include "google/protobuf/message.h"
+#ifndef CAFFE_PLAYER
 #include "hdf5.h"
 #include "hdf5_hl.h"
+#endif
 
 #include "caffe/blob.hpp"
 #include "caffe/common.hpp"
@@ -19,6 +25,7 @@ namespace caffe {
 using ::google::protobuf::Message;
 
 inline void MakeTempFilename(string* temp_filename) {
+#ifndef _MSC_VER
   temp_filename->clear();
   *temp_filename = "/tmp/caffe_test.XXXXXX";
   char* temp_filename_cstr = new char[temp_filename->size() + 1];
@@ -29,9 +36,11 @@ inline void MakeTempFilename(string* temp_filename) {
   close(fd);
   *temp_filename = temp_filename_cstr;
   delete[] temp_filename_cstr;
+#endif
 }
 
 inline void MakeTempDir(string* temp_dirname) {
+#ifndef _MSC_VER
   temp_dirname->clear();
   *temp_dirname = "/tmp/caffe_test.XXXXXX";
   char* temp_dirname_cstr = new char[temp_dirname->size() + 1];
@@ -42,6 +51,7 @@ inline void MakeTempDir(string* temp_dirname) {
       << "Failed to create a temporary directory at: " << *temp_dirname;
   *temp_dirname = temp_dirname_cstr;
   delete[] temp_dirname_cstr;
+#endif
 }
 
 bool ReadProtoFromTextFile(const char* filename, Message* proto);
@@ -140,6 +150,7 @@ cv::Mat DecodeDatumToCVMat(const Datum& datum, bool is_color);
 
 void CVMatToDatum(const cv::Mat& cv_img, Datum* datum);
 
+#ifndef CAFFE_PLAYER
 template <typename Dtype>
 void hdf5_load_nd_dataset_helper(
     hid_t file_id, const char* dataset_name_, int min_dim, int max_dim,
@@ -153,6 +164,7 @@ void hdf5_load_nd_dataset(
 template <typename Dtype>
 void hdf5_save_nd_dataset(
     const hid_t file_id, const string& dataset_name, const Blob<Dtype>& blob);
+#endif
 
 }  // namespace caffe
 

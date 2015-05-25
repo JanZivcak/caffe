@@ -14,7 +14,9 @@
 #include "caffe/util/math_functions.hpp"
 #include "caffe/util/upgrade_proto.hpp"
 
+#ifndef CAFFE_PLAYER
 #include "caffe/test/test_caffe_main.hpp"
+#endif
 
 namespace caffe {
 

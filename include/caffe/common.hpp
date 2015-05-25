@@ -1,8 +1,10 @@
 #ifndef CAFFE_COMMON_HPP_
 #define CAFFE_COMMON_HPP_
 
+#ifndef CAFFE_PLAYER
 #include <boost/shared_ptr.hpp>
 #include <gflags/gflags.h>
+#endif
 #include <glog/logging.h>
 
 #include <climits>
@@ -70,15 +72,21 @@ namespace cv { class Mat; }
 
 namespace caffe {
 
+#ifdef CAFFE_PLAYER
+using std::shared_ptr;
+#else
 // We will use the boost shared_ptr instead of the new C++11 one mainly
 // because cuda does not work (at least now) well with C++11 features.
 using boost::shared_ptr;
+#endif
 
 // Common functions and classes from std that caffe often uses.
 using std::fstream;
 using std::ios;
+#ifndef _MSC_VER
 using std::isnan;
 using std::isinf;
+#endif
 using std::iterator;
 using std::make_pair;
 using std::map;
@@ -106,6 +114,7 @@ class Caffe {
   }
   enum Brew { CPU, GPU };
 
+#ifndef CAFFE_PLAYER
   // This random number generator facade hides boost and CUDA rng
   // implementation from one another (for cross-platform compatibility).
   class RNG {
@@ -127,6 +136,7 @@ class Caffe {
     }
     return *(Get().random_generator_);
   }
+#endif
 #ifndef CPU_ONLY
   inline static cublasHandle_t cublas_handle() { return Get().cublas_handle_; }
   inline static curandGenerator_t curand_generator() {
@@ -155,7 +165,9 @@ class Caffe {
   cublasHandle_t cublas_handle_;
   curandGenerator_t curand_generator_;
 #endif
+#ifndef CAFFE_PLAYER
   shared_ptr<RNG> random_generator_;
+#endif
 
   Brew mode_;
   static shared_ptr<Caffe> singleton_;
