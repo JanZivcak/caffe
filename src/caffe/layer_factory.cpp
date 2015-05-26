@@ -178,7 +178,7 @@ REGISTER_LAYER_CREATOR(Python, GetPythonLayer);
 // registered in their corresponding cpp files. Do not register them here.
 }  // namespace caffe
 
-#ifdef _MSC_VER
+#ifdef CAFFE_PLAYER
 MSCLayerRegister::MSCLayerRegister()
 {
     caffe::RegisterAccuracy();

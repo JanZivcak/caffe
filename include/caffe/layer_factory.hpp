@@ -123,7 +123,7 @@ class LayerRegisterer {
   void Register##type(){}                                                      \
   REGISTER_LAYER_CREATOR(type, Creator_##type##Layer)
 
-#ifdef _MSC_VER
+#ifdef CAFFE_PLAYER
 
 void RegisterAccuracy();
 void RegisterBNLL();
@@ -147,7 +147,7 @@ void RegisterSigmoidCrossEntropyLoss();
 
 }  // namespace caffe
 
-#ifdef _MSC_VER
+#ifdef CAFFE_PLAYER
 
 class MSCLayerRegister
 {

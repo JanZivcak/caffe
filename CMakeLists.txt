@@ -14,6 +14,7 @@ include(cmake/ConfigGen.cmake)
 
 # ---[ Options
 caffe_option(CPU_ONLY  "Build Caffe wihtout CUDA support" OFF) # TODO: rename to USE_CUDA
+caffe_option(CAFFE_PLAYER  "Build Caffe Player - Caffe which can only play the pretrained models" OFF)
 caffe_option(USE_CUDNN "Build Caffe with cuDNN libary support" ON IF NOT CPU_ONLY)
 caffe_option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 caffe_option(BUILD_python "Build Python wrapper" ON)
@@ -33,7 +34,7 @@ include(cmake/Dependencies.cmake)
 
 # ---[ Flags
 if(UNIX OR APPLE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wall")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wall -std=c++0x")
 endif()
 
 if(USE_libstdcpp)
