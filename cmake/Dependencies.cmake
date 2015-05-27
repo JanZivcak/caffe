@@ -13,7 +13,12 @@ find_package(Threads REQUIRED)
 list(APPEND Caffe_LINKER_LIBS ${CMAKE_THREAD_LIBS_INIT})
 
 # ---[ Google-glog
-find_package(Glog REQUIRED)
+if (GLOG_INCLUDE_DIR AND GLOG_LIBRARY_DIR)
+  set(GLOG_INCLUDE_DIRS ${GLOG_INCLUDE_DIR})
+  file(GLOB GLOG_LIBRARIES ${GLOG_LIBRARY_DIR}/*${CMAKE_STATIC_LIBRARY_SUFFIX})
+else()
+  find_package(Glog REQUIRED)
+endif()
 include_directories(SYSTEM ${GLOG_INCLUDE_DIRS})
 list(APPEND Caffe_LINKER_LIBS ${GLOG_LIBRARIES})
 

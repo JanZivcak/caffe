@@ -1,7 +1,13 @@
 # Finds Google Protocol Buffers library and compilers and extends
 # the standart cmake script with version and python generation support
 
-find_package( Protobuf REQUIRED )
+if (PROTOBUF_INCLUDE_DIR AND PROTOBUF_LIBRARY_DIR)
+  file(GLOB PROTOBUF_LIBRARIES ${PROTOBUF_LIBRARY_DIR}/*${CMAKE_STATIC_LIBRARY_SUFFIX})
+  SET(PROTOBUF_PROTOC_EXECUTABLE ${PROTOBUF_LIBRARY_DIR}/protoc${CMAKE_EXECUTABLE_SUFFIX})
+else()
+  find_package( Protobuf REQUIRED )
+endif()
+
 include_directories(SYSTEM ${PROTOBUF_INCLUDE_DIR})
 list(APPEND Caffe_LINKER_LIBS ${PROTOBUF_LIBRARIES})
 
