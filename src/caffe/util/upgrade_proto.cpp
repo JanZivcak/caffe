@@ -937,4 +937,18 @@ void ReadNetParamsFromBinaryFileOrDie(const string& param_file,
   UpgradeNetAsNeeded(param_file, param);
 }
 
+void ReadNetParamsFromMemoryOrDie(const unsigned char* buffer, int size,
+                                  NetParameter* param) {
+    CHECK(ReadProtoFromMemory(buffer, size, param))
+        << "Failed to parse NetParameter memory at: " << static_cast<const void*>(buffer);
+    UpgradeNetAsNeeded("MEMORY", param);
+}
+
+void ReadNetParamsFromStringOrDie(const string& netStringParams,
+                                  NetParameter* param) {
+    CHECK(ReadProtoFromString(netStringParams, param))
+        << "Failed to parse NetParameter from string";
+    UpgradeNetAsNeeded("STRING", param);
+}
+
 }  // namespace caffe

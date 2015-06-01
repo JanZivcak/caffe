@@ -58,6 +58,10 @@ void ReadNetParamsFromTextFileOrDie(const string& param_file,
                                     NetParameter* param);
 void ReadNetParamsFromBinaryFileOrDie(const string& param_file,
                                       NetParameter* param);
+void ReadNetParamsFromMemoryOrDie(const unsigned char* buffer, int size,
+                                  NetParameter* param);
+void ReadNetParamsFromStringOrDie(const string& netStringParams,
+                                  NetParameter* param);
 
 }  // namespace caffe
 

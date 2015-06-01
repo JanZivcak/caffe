@@ -62,6 +62,26 @@ bool ReadProtoFromBinaryFile(const char* filename, Message* proto) {
   return success;
 }
 
+bool ReadProtoFromMemory(const unsigned char* buffer, int size, Message* proto)
+{
+    CodedInputStream* coded_input = new CodedInputStream(buffer, size);
+    coded_input->SetTotalBytesLimit(kProtoReadBytesLimit, 536870912);
+
+    bool success = proto->ParseFromCodedStream(coded_input);
+    delete coded_input;
+
+    return success;
+}
+
+bool ReadProtoFromString(const string& protoString, Message* proto)
+{
+    std::istringstream stringStream(protoString);
+    google::protobuf::io::IstreamInputStream input(&stringStream);
+    bool success = google::protobuf::TextFormat::Parse(&input, proto);
+
+    return success;
+}
+
 void WriteProtoToBinaryFile(const Message& proto, const char* filename) {
   fstream output(filename, ios::out | ios::trunc | ios::binary);
   CHECK(proto.SerializeToOstream(&output));

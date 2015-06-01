@@ -755,6 +755,13 @@ void Net<Dtype>::CopyTrainedLayersFrom(const string trained_filename) {
 }
 
 template <typename Dtype>
+void Net<Dtype>::CopyTrainedLayersFrom(const unsigned char* buffer, int size) {
+    NetParameter param;
+    ReadNetParamsFromMemoryOrDie(buffer, size, &param);
+    CopyTrainedLayersFrom(param);
+}
+
+template <typename Dtype>
 void Net<Dtype>::ToProto(NetParameter* param, bool write_diff) const {
   param->Clear();
   param->set_name(name_);

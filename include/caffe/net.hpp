@@ -98,6 +98,7 @@ class Net {
    */
   void CopyTrainedLayersFrom(const NetParameter& param);
   void CopyTrainedLayersFrom(const string trained_filename);
+  void CopyTrainedLayersFrom(const unsigned char* buffer, int size);
   /// @brief Writes the net to a proto.
   void ToProto(NetParameter* param, bool write_diff = false) const;
 
