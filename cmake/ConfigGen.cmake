@@ -58,7 +58,11 @@ function(caffe_generate_export_configs)
   configure_file("cmake/Templates/CaffeConfig.cmake.in" "${PROJECT_BINARY_DIR}/CaffeConfig.cmake" @ONLY)
 
   # Add targets to the build-tree export set
-  export(TARGETS caffe proto FILE "${PROJECT_BINARY_DIR}/CaffeTargets.cmake")
+  if(CAFFE_PLAYER)
+    export(TARGETS caffe_player proto FILE "${PROJECT_BINARY_DIR}/CaffeTargets.cmake")
+  else()
+    export(TARGETS caffe proto FILE "${PROJECT_BINARY_DIR}/CaffeTargets.cmake")
+  endif()
   export(PACKAGE Caffe)
 
   # ---[ Configure install-tree CaffeConfig.cmake file ]---

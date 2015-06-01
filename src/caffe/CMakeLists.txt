@@ -79,19 +79,33 @@ if(CAFFE_PLAYER)
   caffe_convert_absolute_paths(srcs)
   
   add_definitions(-DCAFFE_PLAYER)
+  
+  add_library(caffe_player ${srcs})
+  target_link_libraries(caffe_player proto ${Caffe_LINKER_LIBS})
+  
+  if(CAFFE_PLAYER_OUTPUT_DIR)
+    set_target_properties(caffe_player PROPERTIES
+      ARCHIVE_OUTPUT_DIRECTORY ${CAFFE_PLAYER_OUTPUT_DIR}
+      LIBRARY_OUTPUT_DIRECTORY ${CAFFE_PLAYER_OUTPUT_DIR}
+    )
+  else()
+    caffe_default_properties(caffe_player)
+  endif()
 else()
   # creates 'test_srcs', 'srcs', 'test_cuda', 'cuda' lists
   caffe_pickup_caffe_sources(${PROJECT_SOURCE_DIR})
+  
+  if(HAVE_CUDA)
+    caffe_cuda_compile(cuda_objs ${cuda})
+    list(APPEND srcs ${cuda_objs} ${cuda})
+  endif()
+  
+  add_library(caffe ${srcs})
+  target_link_libraries(caffe proto ${Caffe_LINKER_LIBS})
+  caffe_default_properties(caffe)
 endif()
 
-if(HAVE_CUDA)
-  caffe_cuda_compile(cuda_objs ${cuda})
-  list(APPEND srcs ${cuda_objs} ${cuda})
-endif()
 
-add_library(caffe ${srcs})
-target_link_libraries(caffe proto ${Caffe_LINKER_LIBS})
-caffe_default_properties(caffe)
 
 if(NOT CAFFE_PLAYER)
 # ---[ Tests
@@ -101,7 +115,11 @@ endif()
 # ---[ Install
 install(DIRECTORY ${Caffe_INCLUDE_DIR}/caffe DESTINATION include)
 install(FILES ${proto_hdrs} DESTINATION include/caffe/proto)
-install(TARGETS caffe proto EXPORT CaffeTargets DESTINATION lib)
+if(CAFFE_PLAYER)
+  install(TARGETS caffe_player proto EXPORT CaffeTargets DESTINATION lib)
+else()  
+  install(TARGETS caffe proto EXPORT CaffeTargets DESTINATION lib)
+endif()
 
 file(WRITE ${PROJECT_BINARY_DIR}/__init__.py)
 list(APPEND proto_python ${PROJECT_BINARY_DIR}/__init__.py)
