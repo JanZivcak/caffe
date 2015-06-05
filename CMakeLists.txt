@@ -12,6 +12,7 @@ include(cmake/Misc.cmake)
 include(cmake/Summary.cmake)
 include(cmake/ConfigGen.cmake)
 
+
 # ---[ Options
 caffe_option(CPU_ONLY  "Build Caffe wihtout CUDA support" OFF) # TODO: rename to USE_CUDA
 caffe_option(CAFFE_PLAYER  "Build Caffe Player - Caffe which can only play the pretrained models" OFF)
