@@ -179,7 +179,12 @@ REGISTER_LAYER_CREATOR(Python, GetPythonLayer);
 }  // namespace caffe
 
 #ifdef CAFFE_PLAYER
+
 MSCLayerRegister::MSCLayerRegister()
+{
+}
+
+void MSCLayerRegister::Registrer()
 {
     caffe::RegisterAccuracy();
     caffe::RegisterBNLL();
@@ -199,4 +204,10 @@ MSCLayerRegister::MSCLayerRegister()
     caffe::RegisterSplit();
     caffe::RegisterSigmoidCrossEntropyLoss();
 }
+void MSCLayerRegister::Dealloc()
+{
+    caffe::LayerRegistry<float>::Dealloc();
+    caffe::LayerRegistry<double>::Dealloc();
+}
+
 #endif

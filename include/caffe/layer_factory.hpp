@@ -56,8 +56,18 @@ class LayerRegistry {
   typedef shared_ptr<Layer<Dtype> > (*Creator)(const LayerParameter&);
   typedef std::map<string, Creator> CreatorRegistry;
 
-  static CreatorRegistry& Registry() {
+  static CreatorRegistry& Registry(bool deleteMe = false) {
     static CreatorRegistry* g_registry_ = new CreatorRegistry();
+
+    //TODO: this is not nice solution, but only one possible with static variable pattern
+    //TODO: rework in another approach - e.g. remove static variable and create specific delete
+    if (deleteMe == true && g_registry_ != NULL)
+    {
+        delete g_registry_;
+        g_registry_ = NULL;
+        return std::map<string, Creator>();
+    }
+
     return *g_registry_;
   }
 
@@ -77,6 +87,12 @@ class LayerRegistry {
     CHECK_EQ(registry.count(type), 1) << "Unknown layer type: " << type
         << " (known types: " << LayerTypeList() << ")";
     return registry[type](param);
+  }
+
+  static void Dealloc() {
+      CreatorRegistry& registry = Registry();
+      registry.clear();
+      Registry(true);
   }
 
  private:
@@ -153,6 +169,8 @@ class MSCLayerRegister
 {
 public:
     MSCLayerRegister();
+    static void Registrer();
+    static void Dealloc();
 };
 
 static MSCLayerRegister _msc_layer_register;
