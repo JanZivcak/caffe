@@ -182,10 +182,6 @@ REGISTER_LAYER_CREATOR(Python, GetPythonLayer);
 
 MSCLayerRegister::MSCLayerRegister()
 {
-}
-
-void MSCLayerRegister::Registrer()
-{
     caffe::RegisterAccuracy();
     caffe::RegisterBNLL();
     caffe::RegisterConcat();
@@ -203,11 +199,6 @@ void MSCLayerRegister::Registrer()
     caffe::RegisterSoftmaxWithLoss();
     caffe::RegisterSplit();
     caffe::RegisterSigmoidCrossEntropyLoss();
-}
-void MSCLayerRegister::Dealloc()
-{
-    caffe::LayerRegistry<float>::Dealloc();
-    caffe::LayerRegistry<double>::Dealloc();
 }
 
 #endif

@@ -56,18 +56,13 @@ class LayerRegistry {
   typedef shared_ptr<Layer<Dtype> > (*Creator)(const LayerParameter&);
   typedef std::map<string, Creator> CreatorRegistry;
 
-  static CreatorRegistry& Registry(bool deleteMe = false) {
-    static CreatorRegistry* g_registry_ = new CreatorRegistry();
+  static CreatorRegistry* g_registry_;
 
-    //TODO: this is not nice solution, but only one possible with static variable pattern
-    //TODO: rework in another approach - e.g. remove static variable and create specific delete
-    if (deleteMe == true && g_registry_ != NULL)
+  static CreatorRegistry& Registry() {
+    if (g_registry_ == NULL)
     {
-        delete g_registry_;
-        g_registry_ = NULL;
-        return std::map<string, Creator>();
+        g_registry_ = new CreatorRegistry();
     }
-
     return *g_registry_;
   }
 
@@ -90,9 +85,12 @@ class LayerRegistry {
   }
 
   static void Dealloc() {
-      CreatorRegistry& registry = Registry();
-      registry.clear();
-      Registry(true);
+      if (g_registry_ != NULL)
+      {
+          g_registry_->clear();
+          delete g_registry_;
+          g_registry_ = NULL;
+      }
   }
 
  private:
@@ -114,6 +112,8 @@ class LayerRegistry {
   }
 };
 
+template <typename Dtype> 
+std::map<string, shared_ptr<Layer<Dtype>> (*)(const LayerParameter&)>* LayerRegistry<Dtype>::g_registry_;
 
 template <typename Dtype>
 class LayerRegisterer {
@@ -122,6 +122,12 @@ class LayerRegisterer {
                   shared_ptr<Layer<Dtype> > (*creator)(const LayerParameter&)) {
     // LOG(INFO) << "Registering layer type: " << type;
     LayerRegistry<Dtype>::AddCreator(type, creator);
+  }
+
+  ~LayerRegisterer()
+  {
+      //This will be called multiple times but it is fixed within the method
+      LayerRegistry<Dtype>::Dealloc();
   }
 };
 
@@ -169,8 +175,6 @@ class MSCLayerRegister
 {
 public:
     MSCLayerRegister();
-    static void Registrer();
-    static void Dealloc();
 };
 
 static MSCLayerRegister _msc_layer_register;
