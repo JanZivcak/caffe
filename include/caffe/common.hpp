@@ -1,6 +1,9 @@
 #ifndef CAFFE_COMMON_HPP_
 #define CAFFE_COMMON_HPP_
 
+#define FORCE_LINK_THIS(x) int force_link_##x(){return 0;};
+#define FORCE_LINK_THAT(x) int force_link_##x(); int force_link_local_##x = force_link_##x();
+
 #ifndef CAFFE_PLAYER
 #include <boost/shared_ptr.hpp>
 #include <gflags/gflags.h>
@@ -21,6 +24,10 @@
 
 #include "caffe/util/device_alternate.hpp"
 
+// Convert macro to string
+#define STRINGIFY(m) #m
+#define AS_STRING(m) STRINGIFY(m)
+
 // gflags 2.1 issue: namespace google was changed to gflags without warning.
 // Luckily we will be able to use GFLAGS_GFLAGS_H_ to detect if it is version
 // 2.1. If yes, we will add a temporary solution to redirect the namespace.
@@ -40,7 +47,8 @@ private:\
 #define INSTANTIATE_CLASS(classname) \
   char gInstantiationGuard##classname; \
   template class classname<float>; \
-  template class classname<double>
+  template class classname<double>; \
+  int ForceLink##classname(){return 1;}
 
 #define INSTANTIATE_LAYER_GPU_FORWARD(classname) \
   template void classname<float>::Forward_gpu( \
@@ -84,7 +92,10 @@ using boost::shared_ptr;
 // Common functions and classes from std that caffe often uses.
 using std::fstream;
 using std::ios;
-#ifndef _MSC_VER
+#ifdef _MSC_VER
+#define isnan _isnan
+inline int isinf(double x) { return !isnan(x) && isnan(x - x);}
+#else
 using std::isnan;
 using std::isinf;
 #endif
@@ -107,12 +118,12 @@ void GlobalInit(int* pargc, char*** pargv);
 class Caffe {
  public:
   ~Caffe();
-  inline static Caffe& Get() {
-    if (!singleton_.get()) {
-      singleton_.reset(new Caffe());
-    }
-    return *singleton_;
-  }
+
+  // Thread local context for Caffe. Moved to common.cpp instead of
+  // including boost/thread.hpp to avoid a boost/NVCC issues (#1009, #1010)
+  // on OSX. Also fails on Linux with CUDA 7.0.18.
+  static Caffe& Get();
+
   enum Brew { CPU, GPU };
 
 #ifndef CAFFE_PLAYER
@@ -160,6 +171,16 @@ class Caffe {
   static void SetDevice(const int device_id);
   // Prints the current GPU status.
   static void DeviceQuery();
+  // Check if specified device is available
+  static bool CheckDevice(const int device_id);
+  // Search from start_id to the highest possible device ordinal,
+  // return the ordinal of the first available device.
+  static int FindDevice(const int start_id = 0);
+  // Parallel training info
+  inline static int solver_count() { return Get().solver_count_; }
+  inline static void set_solver_count(int val) { Get().solver_count_ = val; }
+  inline static bool root_solver() { return Get().root_solver_; }
+  inline static void set_root_solver(bool val) { Get().root_solver_ = val; }
 
  protected:
 #ifndef CPU_ONLY
@@ -171,7 +192,8 @@ class Caffe {
 #endif
 
   Brew mode_;
-  static shared_ptr<Caffe> singleton_;
+  int solver_count_;
+  bool root_solver_;
 
  private:
   // The private constructor to avoid duplicate instantiation.

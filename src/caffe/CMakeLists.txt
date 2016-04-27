@@ -33,36 +33,45 @@ if(CAFFE_PLAYER)
     "${PROJECT_SOURCE_DIR}/src/caffe/blob.cpp" 
     "${PROJECT_SOURCE_DIR}/src/caffe/common.cpp" 
     "${PROJECT_SOURCE_DIR}/src/caffe/layer_factory.cpp" 
+    "${PROJECT_SOURCE_DIR}/src/caffe/layer.cpp" 
     "${PROJECT_SOURCE_DIR}/src/caffe/net.cpp" 
     "${PROJECT_SOURCE_DIR}/src/caffe/solver.cpp" 
     "${PROJECT_SOURCE_DIR}/src/caffe/syncedmem.cpp"
     
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/absval_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/accuracy_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/argmax_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/base_conv_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/bnll_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/concat_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/conv_layer.cpp" 
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/deconv_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/dropout_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/eltwise_layer.cpp"
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/euclidean_loss_layer.cpp"
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/flatten_layer.cpp"    
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/hinge_loss_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/exp_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/flatten_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/im2col_layer.cpp"
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/infogain_loss_layer.cpp"
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/inner_product_layer.cpp"    
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/loss_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/inner_product_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/input_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/log_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/log_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/lrn_layer.cpp"
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/multinomial_logistic_loss_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/mvn_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/neuron_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/pooling_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/power_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/prelu_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/reduction_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/relu_layer.cpp"
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/sigmoid_cross_entropy_loss_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/reshape_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/sigmoid_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/silence_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/slice_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/softmax_layer.cpp"
-    "${PROJECT_SOURCE_DIR}/src/caffe/layers/softmax_loss_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/split_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/spp_layer.cpp"
     "${PROJECT_SOURCE_DIR}/src/caffe/layers/tanh_layer.cpp"
+    "${PROJECT_SOURCE_DIR}/src/caffe/layers/threshold_layer.cpp"
     
     "${PROJECT_SOURCE_DIR}/src/caffe/proto/caffe.proto"
     
@@ -103,9 +112,12 @@ else()
   add_library(caffe ${srcs})
   target_link_libraries(caffe proto ${Caffe_LINKER_LIBS})
   caffe_default_properties(caffe)
+  
+  set_target_properties(caffe PROPERTIES
+    VERSION   ${CAFFE_TARGET_VERSION}
+    SOVERSION ${CAFFE_TARGET_SOVERSION}
+    )
 endif()
-
-
 
 if(NOT CAFFE_PLAYER)
 # ---[ Tests
