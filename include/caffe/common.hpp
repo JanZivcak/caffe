@@ -1,9 +1,6 @@
 #ifndef CAFFE_COMMON_HPP_
 #define CAFFE_COMMON_HPP_
 
-#define FORCE_LINK_THIS(x) int force_link_##x(){return 0;};
-#define FORCE_LINK_THAT(x) int force_link_##x(); int force_link_local_##x = force_link_##x();
-
 #ifndef CAFFE_PLAYER
 #include <boost/shared_ptr.hpp>
 #include <gflags/gflags.h>
@@ -47,8 +44,7 @@ private:\
 #define INSTANTIATE_CLASS(classname) \
   char gInstantiationGuard##classname; \
   template class classname<float>; \
-  template class classname<double>; \
-  int ForceLink##classname(){return 1;}
+  template class classname<double>
 
 #define INSTANTIATE_LAYER_GPU_FORWARD(classname) \
   template void classname<float>::Forward_gpu( \
