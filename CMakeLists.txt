@@ -10,8 +10,8 @@ endif()
 project(Caffe C CXX)
 
 # ---[ Caffe version
-set(CAFFE_TARGET_VERSION "1.0.0-rc3")
-set(CAFFE_TARGET_SOVERSION "1.0.0-rc3")
+set(CAFFE_TARGET_VERSION "1.0.0-rc3" CACHE STRING "Caffe logical version")
+set(CAFFE_TARGET_SOVERSION "1.0.0-rc3" CACHE STRING "Caffe soname version")
 add_definitions(-DCAFFE_VERSION=${CAFFE_TARGET_VERSION})
 
 # ---[ Using cmake scripts and modules
@@ -89,8 +89,8 @@ if(NOT CAFFE_PLAYER)
   add_subdirectory(matlab)
   add_subdirectory(docs)
 
-  # ---[ Linter target
-  add_custom_target(lint COMMAND ${CMAKE_COMMAND} -P ${PROJECT_SOURCE_DIR}/cmake/lint.cmake)
+# ---[ Linter target
+add_custom_target(lint COMMAND ${CMAKE_COMMAND} -P ${PROJECT_SOURCE_DIR}/cmake/lint.cmake)
 endif()
 
 # ---[ pytest target
